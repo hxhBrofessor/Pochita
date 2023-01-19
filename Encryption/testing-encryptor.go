@@ -243,7 +243,7 @@ func decryptFile3() {
 	}
 }
 
-
+/*
 //This function will decrypt the 2ENC.bin file and write it to a global variable
 func decryptFile4() {
 	// Reading ciphertext file
@@ -286,3 +286,4 @@ func decryptFile4() {
 	shellcode = plainText
 
 }
+*/
