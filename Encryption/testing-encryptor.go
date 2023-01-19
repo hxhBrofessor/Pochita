@@ -81,6 +81,7 @@ func encryptFile() {
 	}
 }
 
+/*
 func decryptFile() {
 	// Reading ciphertext file
 	file, err := os.Open("ENC.bin")
@@ -243,7 +244,7 @@ func decryptFile3() {
 	}
 }
 
-/*
+
 //This function will decrypt the 2ENC.bin file and write it to a global variable
 func decryptFile4() {
 	// Reading ciphertext file
