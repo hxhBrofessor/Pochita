@@ -23,8 +23,12 @@ import (
 	"os"
 )
 
+var binFile string
+
 func main() {
 
+	fmt.Println("Enter the name of the binary to encrypt: ")
+	fmt.Scanln(&binFile)
 	encryptFile()
 	//decryptFile() //unencrypts the file
 	//decryptFile2()
@@ -32,7 +36,7 @@ func main() {
 
 func encryptFile() {
 	// Reading plaintext file
-	file, err := os.Open("calc.bin")
+	file, err := os.Open(binFile)
 	if err != nil {
 		log.Fatalf("Error opening file: %v", err)
 	}
