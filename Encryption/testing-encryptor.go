@@ -24,11 +24,16 @@ import (
 )
 
 var binFile string
+var outEncrypted string
 
 func main() {
 
 	fmt.Println("Enter the name of the binary to encrypt: ")
 	fmt.Scanln(&binFile)
+
+	fmt.Println("Name your encrypted binary(EX:ENC2.bin): ")
+	fmt.Scanln(&outEncrypted)
+
 	encryptFile()
 	//decryptFile() //unencrypts the file
 	//decryptFile2()
@@ -73,7 +78,7 @@ func encryptFile() {
 
 	// Writing ciphertext file
 	//file, err = os.Create("ENC.bin")
-	file, err = os.Create("2ENC.bin") //this will contain the encrypted data as a byte array
+	file, err = os.Create(outEncrypted) //this will contain the encrypted data as a byte array
 	if err != nil {
 		log.Fatalf("Error creating file: %v", err)
 	}
