@@ -74,7 +74,7 @@ func getFile() {
 func decryptFile() {
 	// Reading ciphertext file
 	//C:\\Users\\Public\\Downloads\\ENC.bin" /path will be used for later
-	file, err := os.Open("C:\\Users\\Sec504\\Documents\\git\\MalwareDev\\Golang-DEV\\2-alittleNonBasic\\1-Encryptor\\2ENC.bin")
+	file, err := os.Open("ENC.bin")
 	if err != nil {
 		log.Fatalf("Error opening file: %v", err)
 	}
