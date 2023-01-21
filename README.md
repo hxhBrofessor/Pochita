@@ -40,3 +40,10 @@ ENC3.bin
 - Make sure to change the URL in the getFile()
 
 - and replace `2ENC.bin` with your encrypted binary that you generated
+- `go build -ldflags="-s -w -extldflags -static" .\shellcode-execute.go`
+
+## Further Testing on the following
+
+- Use [Garble](https://github.com/burrowers/garble) maybe?
+- Use [UPX](https://upx.github.io/) to reduce the binary size and compressing it.
+- Test your EXE against [Defender Check](https://github.com/matterpreter/DefenderCheck)
