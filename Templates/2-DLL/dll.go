@@ -1,10 +1,13 @@
-package main
-
 /*
+Author: hxhBrofessor
 
 PS C:\Users\test\Documents\Demo\Pochita-main\Template\2-DLL> go build -ldflags="-s -w -extldflags -static" -buildmode=c-shared -o myMerp.dll dll.go
 PS C:\Users\test\Documents\Demo\Pochita-main\Template\2-DLL> rundll32.exe .\myMerp.dll,Wutang
 */
+
+package main
+
+
 
 import (
 	"crypto/aes"
